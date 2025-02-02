@@ -1,9 +1,9 @@
-# Kroger API Data Scraper
+# API Data Scraper
 
-This project is designed to fetch product data from the Kroger API and store it in a MongoDB database. It utilizes authentication via the Kroger API and dynamically creates collections for each store's products.
+This project is designed to fetch product data from the API and store it in a MongoDB database. It utilizes authentication via the API and dynamically creates collections for each store's products.
 
 ## Features
-- Fetches product data from Kroger API using search terms.
+- Fetches product data from API using search terms.
 - Stores product data in MongoDB with collections dynamically created per store.
 - Uses pagination to retrieve all available products efficiently.
 - Runs with MongoDB inside a Docker container for easy setup.
@@ -32,10 +32,7 @@ Ensure you have the following installed:
 3. **Configure Environment Variables:**
    Create a `.env` file in the root directory and add the required environment variables:
    ```ini
-   BASE_URL=<Kroger API base URL>
-   KROGER_CLIENT_ID=<Your Kroger Client ID>
-   KROGER_CLIENT_SECRET=<Your Kroger Client Secret>
-   KROGER_TOKEN_URL=<Kroger API token URL>
+   BASE_URL=< API base URL>
    ```
 
 4. **Run MongoDB using Docker:**
@@ -50,10 +47,10 @@ Ensure you have the following installed:
    ```
 
 ## API Authentication
-The script uses client credentials to authenticate with the Kroger API. Tokens are cached to avoid unnecessary requests. If a token expires, the script automatically retrieves a new one.
+The script uses client credentials to authenticate with the API. Tokens are cached to avoid unnecessary requests. If a token expires, the script automatically retrieves a new one.
 
 ## MongoDB Data Storage
-- MongoDB runs inside Docker with the container name `mongodb_kroger`.
+- MongoDB runs inside Docker with the container name `mongodb_your_name`.
 - Product data is stored in collections named `products_store_<store_id>`.
 - Data includes `productId`, `name`, `price`, and other relevant attributes.
 
