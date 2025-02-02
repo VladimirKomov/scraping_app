@@ -76,6 +76,9 @@ def fetch_all_products_with_pagination(keyword: str, location_id: str):
         time.sleep(delay)
         print("Proceeding!")
 
+        if start > 251:
+            break
+
         # response
         response = requests.get(
             f"{BASE_URL}products",
@@ -110,8 +113,6 @@ def fetch_all_products_with_pagination(keyword: str, location_id: str):
         # Increase the offset
         # Adjust based on actual number of returned products
         start += limit
-        if start > 251:
-            break
 
         # Check the total available results
         if "meta" in response_data and "pagination" in response_data["meta"]:
