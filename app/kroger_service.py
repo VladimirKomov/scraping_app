@@ -2,18 +2,19 @@
 This module is the primary handler for retrieving and saving product data from the Kroger API.
 It connects to MongoDB and dynamically stores product information per store.
 """
+from datetime import datetime
 
 import requests
 from pymongo import MongoClient
 from app.auth import get_kroger_token
-from app.config import BASE_URL
+from app.config import BASE_URL, DATA_SOURCE
 
 # Connect to MongoDB
 client = MongoClient("mongodb://admin:password@localhost:27017/")
 # you can replace the name with any of your own
 db = client["kroger_db"]
 
-def save_response_to_store_collection(response, store_id):
+def save_response_to_store_collection(response, store_id, keyword):
     """
     Saves the API response data to a dynamically created MongoDB collection for a specific store.
 
@@ -29,16 +30,24 @@ def save_response_to_store_collection(response, store_id):
 
     for product in products:
         try:
+            # Add mandatory fields
+            product["ingredient_name"] = keyword
+            product["date"] = datetime.now()
+            product["data_source"] = DATA_SOURCE
+
             # Use upsert to avoid duplicates
             store_collection.update_one(
-                {"productId": product["productId"]},  # Unique identifier: productId
-                {"$set": product},  # Update or insert data
+                # Unique identifier: productId
+                {"productId": product["productId"]},
+                # Update or insert data
+                {"$set": product},
                 upsert=True
             )
         except Exception as e:
             print(f"Error saving product {product.get('productId', 'UNKNOWN')} in store {store_id}: {e}")
 
     print(f"Saved {len(products)} products to collection products_store_{store_id}.")
+
 
 def fetch_all_products_with_pagination(keyword: str, location_id: str):
     """
@@ -86,7 +95,7 @@ def fetch_all_products_with_pagination(keyword: str, location_id: str):
                 seen_product_ids.add(product["productId"])
 
         # Save the current batch of products to the database
-        save_response_to_store_collection({"data": products}, location_id)
+        save_response_to_store_collection({"data": products}, location_id, keyword)
 
         # Increase the offset
         # Adjust based on actual number of returned products
