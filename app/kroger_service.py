@@ -72,7 +72,7 @@ def fetch_all_products_with_pagination(keyword: str, location_id: str):
     while True:
         # the function of falling asleep
         delay = random.uniform(1, 5)
-        print(f"Sleeping for {delay:.2f} seconds...")
+        print(f"Sleeping for {delay:.2f} seconds... start = {start}")
         time.sleep(delay)
         print("Proceeding!")
 
@@ -86,6 +86,7 @@ def fetch_all_products_with_pagination(keyword: str, location_id: str):
                 "filter.start": start,
                 "filter.limit": limit,
             },
+            timeout=10
         )
 
         if response.status_code != 200:
@@ -108,17 +109,16 @@ def fetch_all_products_with_pagination(keyword: str, location_id: str):
 
         # Increase the offset
         # Adjust based on actual number of returned products
-        start += len(products)
-
-        if start == 251:
-            start = 250
+        start += limit
+        if start > 251:
+            break
 
         # Check the total available results
         if "meta" in response_data and "pagination" in response_data["meta"]:
             total = response_data["meta"]["pagination"]["total"]
             if start > total:
                 break
-            if start > 250:
+            if start > 251:
                 break
 
     print(f"Total products retrieved: {len(all_products)}")
