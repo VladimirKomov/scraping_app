@@ -7,4 +7,5 @@ app = FastAPI()
 # launching the app
 if __name__ == "__main__":
     # "addressLine1":"14221 E Sam Houston Pkwy N","city":"Houston"
-    process_search("03400128")
+    for i in range(10):
+        process_search("03400128")

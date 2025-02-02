@@ -3,6 +3,8 @@ This module is the primary handler for retrieving and saving product data from t
 It connects to MongoDB and dynamically stores product information per store.
 """
 from datetime import datetime
+import random
+import time
 
 import requests
 from pymongo import MongoClient
@@ -68,6 +70,13 @@ def fetch_all_products_with_pagination(keyword: str, location_id: str):
     limit = 50
 
     while True:
+        # the function of falling asleep
+        delay = random.uniform(1, 5)
+        time.sleep(delay)
+        print(f"Sleeping for {delay:.2f} seconds...")
+        print("Proceeding!")
+
+        # response
         response = requests.get(
             f"{BASE_URL}products",
             headers={"Authorization": f"Bearer {token}"},

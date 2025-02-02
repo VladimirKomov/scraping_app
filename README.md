@@ -68,3 +68,6 @@ docker-compose down -v
 Feel free to submit pull requests or suggest improvements.
 
 
+### Added the function random of falling asleep (random.uniform(1, 5))
+
+
