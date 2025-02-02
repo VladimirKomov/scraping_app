@@ -76,7 +76,7 @@ def fetch_all_products_with_pagination(keyword: str, location_id: str):
         time.sleep(delay)
         print("Proceeding!")
 
-        if start > 251:
+        if start > 250:
             break
 
         # response
@@ -111,7 +111,6 @@ def fetch_all_products_with_pagination(keyword: str, location_id: str):
         save_response_to_store_collection({"data": products}, location_id, keyword)
 
         # Increase the offset
-        # Adjust based on actual number of returned products
         start += limit
 
         # Check the total available results
