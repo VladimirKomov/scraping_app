@@ -72,8 +72,8 @@ def fetch_all_products_with_pagination(keyword: str, location_id: str):
     while True:
         # the function of falling asleep
         delay = random.uniform(1, 5)
-        time.sleep(delay)
         print(f"Sleeping for {delay:.2f} seconds...")
+        time.sleep(delay)
         print("Proceeding!")
 
         # response
