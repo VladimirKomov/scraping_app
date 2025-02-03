@@ -1,11 +1,11 @@
 import requests
 from pymongo import MongoClient
 
-from app.config import SPOONACULAR_API_KEY
+from app.config import SPOONACULAR_API_KEY, MONGO_URI
 from app.kroger_service import fetch_all_products_with_pagination
 
 # Connect to MongoDB
-client = MongoClient("mongodb://admin:password@localhost:27017/")
+client = MongoClient(MONGO_URI)
 db = client["kroger_db"]
 ingredients_collection = db["ingredients_cache"]
 

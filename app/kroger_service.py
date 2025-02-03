@@ -9,10 +9,10 @@ import time
 import requests
 from pymongo import MongoClient
 from app.auth import get_kroger_token
-from app.config import BASE_URL, DATA_SOURCE
+from app.config import BASE_URL, DATA_SOURCE, MONGO_URI
 
 # Connect to MongoDB
-client = MongoClient("mongodb://admin:password@localhost:27017/")
+client = MongoClient(MONGO_URI)
 # you can replace the name with any of your own
 db = client["kroger_db"]
 

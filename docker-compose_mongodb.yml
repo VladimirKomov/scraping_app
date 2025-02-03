@@ -3,6 +3,7 @@ version: '3.8'
 services:
   mongodb:
     image: mongo:latest
+    # you can replace the name with any of your own
     container_name: mongodb_kroger
     restart: always
     ports:
@@ -12,17 +13,6 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
-
-  app:
-    build: .
-    container_name: scraping_app
-    depends_on:
-      - mongodb
-    env_file:
-      - .env
-    command: ["sleep", "infinity"]
-    stdin_open: true
-    tty: true
 
 volumes:
   mongo-data:
