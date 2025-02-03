@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Logs</title>
+</head>
+<body>
+<h2>Live Logs from FastAPI</h2>
+<div id="logs" style="white-space: pre-line; font-family: monospace; background: #eee; padding: 10px; border-radius: 5px;"></div>
+
+<script>
+    const logsDiv = document.getElementById("logs");
+    const socket = new WebSocket("ws://localhost:8000/logs");
+
+    socket.onmessage = function(event) {
+        logsDiv.innerHTML += event.data + "\n";
+    };
+
+    socket.onclose = function() {
+        logsDiv.innerHTML += "\nConnection closed.\n";
+    };
+</script>
+</body>
+</html>

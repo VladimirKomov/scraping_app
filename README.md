@@ -1,109 +1,105 @@
-# API Data Scraper
+# Scraping App
 
-This project is designed to fetch product data from the API and store it in a MongoDB database. It utilizes authentication via the API and dynamically creates collections for each store's products.
+This project is designed to **fetch product data from an API** and store it in a **MongoDB database**.  
+It supports two different environments:
+- **`main` branch**: Standard Python environment using Poetry (no Docker).
+- **`docker` branch**: Fully containerized setup with Docker and WebSocket-based logging.
 
-## Features
-- Fetches product data from API using search terms.
-- Stores product data in MongoDB with collections dynamically created per store.
-- Uses pagination to retrieve all available products efficiently.
-- Runs with MongoDB inside a Docker container for easy setup.
+---
 
-## Prerequisites
-Ensure you have the following installed:
-- [Docker](https://www.docker.com/get-started)
-- [Docker Compose](https://docs.docker.com/compose/install/)
-- Python 3.8+
+## 🛠 Manual Installation & Setup (Branch `main`)
 
-## Installation & Setup
+The **`main` branch** is designed for running the application **without Docker**.
 
-1. **Clone the repository:**
-   ```bash
-   git clone <repository-url>
-   cd <repository-directory>
-   ```
-
-2. **Create a virtual environment and install dependencies:**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   pip install -r requirements.txt
-   ```
-
-3. **Configure Environment Variables:**
-   Create a `.env` file in the root directory and add the required environment variables:
-   ```ini
-   BASE_URL=< API base URL>
-   ```
-
-4. **Run MongoDB using Docker:**
-   ```bash
-   docker-compose up -d
-   ```
-   This will start MongoDB in a Docker container with credentials `admin/password` and persist data using a volume.
-
-5. **Run the script to fetch product data:**
-   ```bash
-   python main.py
-   ```
-
-## API Authentication
-The script uses client credentials to authenticate with the API. Tokens are cached to avoid unnecessary requests. If a token expires, the script automatically retrieves a new one.
-
-## MongoDB Data Storage
-- MongoDB runs inside Docker with the container name `mongodb_your_name`.
-- Product data is stored in collections named `products_store_<store_id>`.
-- Data includes `productId`, `name`, `price`, and other relevant attributes.
-
-## Stopping & Cleaning Up
-To stop the MongoDB container:
-```bash
-docker-compose down
-```
-To remove all data (use with caution):
-```bash
-docker-compose down -v
+### **1️⃣ Clone the repository and switch to `main`**
+```sh
+git clone https://github.com/VladimirKomov/scraping_app.git
+cd scraping_app
+git checkout main
 ```
 
-## Contributing
-Feel free to submit pull requests or suggest improvements.
+### **2️⃣ Install dependencies with Poetry**
+```sh
+poetry install
+```
 
-## 🛠 Deployment in Docker (Branch `docker`)
+### **3️⃣ Configure Environment Variables**
+Create a `.env` file in the root directory and add the required API credentials:
+```ini
+BASE_URL=<API_BASE_URL>
+API_KEY=<YOUR_API_KEY>
+MONGO_URI=mongodb://admin:password@localhost:27017/
+```
 
-The `dev` branch now includes Docker support, allowing the application to run inside a container.
+### **4️⃣ Start MongoDB manually**
+If you're not using Docker, you need a running MongoDB instance:
+```sh
+mongod --dbpath=data/db --port 27017
+```
 
-### 📌 **How to Run the Application in Docker**
-1. **Clone the repository and switch to the `docker` branch**:
-   ```sh
-   git clone https://github.com/VladimirKomov/scraping_app.git
-   cd scraping_app
-   git checkout dev
+### **5️⃣ Run the application with Poetry**
+```sh
+poetry run python main.py
+```
+
+---
+
+## 🚀 Deployment in Docker (Branch `docker`)
+
+The **`docker` branch** includes **full Docker support** and adds **real-time logging** via WebSockets.
+
+### **1️⃣ Clone the repository and switch to `docker`**
+```sh
+git clone https://github.com/VladimirKomov/scraping_app.git
+cd scraping_app
+git checkout docker
+```
+
+### **2️⃣ Start the containers (FastAPI + MongoDB)**
+```sh
+docker-compose up --build -d
+```
+
+### **3️⃣ Verify that everything is running**
+```sh
+docker ps
+```
+
+### **4️⃣ Check if the API is running**
+```sh
+curl http://localhost:8000/
+```
+
+### **5️⃣ API documentation**
+```
+http://localhost:8000/docs
+```
+
+---
+
+## ⚙ **Key Differences Between `main` and `docker`**
+| Feature             | `main` Branch | `docker` Branch |
+|---------------------|--------------|----------------|
+| **Runs with Poetry** | ✅ Yes       | ❌ No (Uses Docker) |
+| **Requires local MongoDB** | ✅ Yes | ❌ No (Uses Docker MongoDB) |
+| **WebSocket Logging** | ❌ No | ✅ Yes |
+| **Easier setup** | ❌ No | ✅ Yes (One command) |
+
+---
+
+## 🔧 **WebSocket Logging (`docker` branch only)**
+The `docker` branch supports **real-time logging in the browser** using WebSockets.
+
+### **How to View Logs in the Browser**
+1. Open:
    ```
-
-2. **Start the containers (application + MongoDB)**:
-   ```sh
-   docker-compose up --build -d
+   http://localhost:8000/static/logs.html
    ```
+2. Logs will update **in real-time** as the application runs.
 
-3. **Verify that the containers are running**:
-   ```sh
-   docker ps
-   ```
+---
 
-4. **Check if the API is running**:
-   ```sh
-   curl http://localhost:8000/
-   ```
-
-5. **API documentation is available at**:
-   ```
-   http://localhost:8000/docs
-   ```
-
-### ⚙ **Docker Structure**
-- **MongoDB** (`mongodb_kroger`) — Database container.
-- **FastAPI application** (`scraping_app`) — API server running inside the container.
-
-### 🔧 **Useful Commands**
+## 🔧 **Useful Commands**
 📌 **Stop all containers**:
 ```sh
 docker-compose down
@@ -119,8 +115,5 @@ docker logs -f scraping_app
 docker exec -it scraping_app sh
 ```
 
-Now the application is fully containerized and runs inside **Docker**. 🚀
-
-
-
+Now the application supports both **Poetry (main branch)** and **Docker (docker branch) with real-time logging!** 🚀
 
