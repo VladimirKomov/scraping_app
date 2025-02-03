@@ -67,7 +67,7 @@ docker-compose down -v
 ## Contributing
 Feel free to submit pull requests or suggest improvements.
 
-## 🛠 Deployment in Docker (Branch `dev`)
+## 🛠 Deployment in Docker (Branch `docker`)
 
 The `dev` branch now includes Docker support, allowing the application to run inside a container.
 
