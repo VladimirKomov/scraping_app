@@ -67,7 +67,60 @@ docker-compose down -v
 ## Contributing
 Feel free to submit pull requests or suggest improvements.
 
+## 🛠 Deployment in Docker (Branch `dev`)
 
-### Added the function random of falling asleep (random.uniform(1, 5))
+The `dev` branch now includes Docker support, allowing the application to run inside a container.
+
+### 📌 **How to Run the Application in Docker**
+1. **Clone the repository and switch to the `dev` branch**:
+   ```sh
+   git clone https://github.com/VladimirKomov/scraping_app.git
+   cd scraping_app
+   git checkout dev
+   ```
+
+2. **Start the containers (application + MongoDB)**:
+   ```sh
+   docker-compose up --build -d
+   ```
+
+3. **Verify that the containers are running**:
+   ```sh
+   docker ps
+   ```
+
+4. **Check if the API is running**:
+   ```sh
+   curl http://localhost:8000/
+   ```
+
+5. **API documentation is available at**:
+   ```
+   http://localhost:8000/docs
+   ```
+
+### ⚙ **Docker Structure**
+- **MongoDB** (`mongodb_kroger`) — Database container.
+- **FastAPI application** (`scraping_app`) — API server running inside the container.
+
+### 🔧 **Useful Commands**
+📌 **Stop all containers**:
+```sh
+docker-compose down
+```
+
+📌 **View application logs**:
+```sh
+docker logs -f scraping_app
+```
+
+📌 **Access the application container shell**:
+```sh
+docker exec -it scraping_app sh
+```
+
+Now the application is fully containerized and runs inside **Docker**. 🚀
+
+
 
 
