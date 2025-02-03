@@ -71,12 +71,12 @@ Feel free to submit pull requests or suggest improvements.
 ### Added the function random of falling asleep (random.uniform(1, 5))
 
 
-## 🛠 Deployment in Docker (Branch `dev`)
+## 🛠 Deployment in Docker (Branch `docker`)
 
 The `dev` branch now includes Docker support, allowing the application to run inside a container.
 
 ### 📌 **How to Run the Application in Docker**
-1. **Clone the repository and switch to the `dev` branch**:
+1. **Clone the repository and switch to the `docker` branch**:
    ```sh
    git clone https://github.com/VladimirKomov/scraping_app.git
    cd scraping_app
