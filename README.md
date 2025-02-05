@@ -7,6 +7,31 @@ It supports two different environments:
 
 ---
 
+## 🔥 New Feature: Intelligent Ingredient Matching (`scripts/update_ingredients.py`)
+
+This project now includes a **powerful ingredient-matching script** that leverages **AI-powered semantic search** to map product descriptions to relevant ingredients.
+
+### **🔹 What does it do?**
+- Extracts **product descriptions** from MongoDB.
+- Uses **SentenceTransformers** (`all-MiniLM-L6-v2`) for text embedding.
+- Finds the **most relevant ingredient** using **FAISS (fast similarity search)**.
+- Updates MongoDB with the **best-matched ingredient name** and **source ID**.
+
+### **🚀 How to Run the Script?**
+```sh
+python scripts/update_ingredients.py
+```
+
+### **📊 How to Verify the Data Update?**
+```sh
+mongosh
+use kroger_db
+db.products_store_03400128.countDocuments({ "ingredient_name": { $exists: true } })
+```
+✅ If the result matches the total number of products, the update was successful!
+
+---
+
 ## 🛠 Manual Installation & Setup (Branch `main`)
 
 The **`main` branch** is designed for running the application **without Docker**.
