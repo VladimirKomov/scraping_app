@@ -2,19 +2,22 @@
 This module is the primary handler for retrieving and saving product data from the Kroger API.
 It connects to MongoDB and dynamically stores product information per store.
 """
-from datetime import datetime
 import random
 import time
+from datetime import datetime
 
 import requests
 from pymongo import MongoClient
+
 from app.auth import get_kroger_token
-from app.config import BASE_URL, DATA_SOURCE, MONGO_URI
+from app.config import BASE_URL, DATA_SOURCE
+from app.db import mongo_db
 
 # Connect to MongoDB
-client = MongoClient(MONGO_URI)
+client = MongoClient("mongodb://admin:password@localhost:27017/")
 # you can replace the name with any of your own
 db = client["kroger_db"]
+
 
 def save_response_to_store_collection(response, store_id, keyword):
     """
@@ -27,8 +30,9 @@ def save_response_to_store_collection(response, store_id, keyword):
         print(f"No data to save for store {store_id}.")
         return
 
-    store_collection = db[f"products_store_{store_id}"]
-    products = response["data"]  # Retrieve product list
+    store_collection = mongo_db.get_store_collection(store_id)
+    # Retrieve product list
+    products = response["data"]
 
     for product in products:
         try:
