@@ -33,7 +33,7 @@ def save_response_to_store_collection(response, store_id, keyword):
             # Add mandatory fields
             product["ingredient_name"] = keyword
             product["date"] = datetime.now()
-            product["data_source"] = DATA_SOURCE
+            product["source_id"] = DATA_SOURCE
 
             # Use upsert to avoid duplicates
             store_collection.update_one(

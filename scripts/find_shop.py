@@ -45,21 +45,21 @@ def find_kroger_stores(filename, city=None, state=None, largest_cities=None):
 
         # Display results
         if kroger_stores:
-            print(f"\n🔎 Found {len(kroger_stores)} Kroger stores:")
+            print(f"\n  Found {len(kroger_stores)} Kroger stores:")
             for store in kroger_stores:
-                print(f"📍 {store['name']} ({store['address']['city']}, {store['address']['state']}), id: {store['locationId']}")
-                print(f"   📌 Address: {store['address']['addressLine1']}, {store['address']['zipCode']}")
-                print(f"   ☎️ Phone: {store.get('phone', 'Not provided')}")
+                print(f"    {store['name']} ({store['address']['city']}, {store['address']['state']}), id: {store['locationId']}")
+                print(f"    Address: {store['address']['addressLine1']}, {store['address']['zipCode']}")
+                print(f"    Phone: {store.get('phone', 'Not provided')}")
                 print("-" * 50)
         else:
-            print("❌ No Kroger stores found.")
+            print("No Kroger stores found.")
 
         return kroger_stores
 
     except FileNotFoundError:
-        print("❌ Error: File not found.")
+        print("Error: File not found.")
     except json.JSONDecodeError:
-        print("❌ Error: Invalid JSON format.")
+        print("Error: Invalid JSON format.")
 
 # Run script with fixed parameters
 if __name__ == "__main__":

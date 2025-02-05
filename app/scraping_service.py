@@ -19,7 +19,7 @@ def get_random_recipe():
     if response.status_code == 200:
         data = response.json().get("recipes", [])
         if not data:
-            print("❌ Error: Spoonacular returned an empty recipe list.")
+            print("Error: Spoonacular returned an empty recipe list.")
             return None, []
 
         recipe = data[0]
@@ -33,7 +33,7 @@ def get_random_recipe():
 
         return title, ingredients
 
-    print(f"❌ Error fetching data from Spoonacular API: {response.status_code}")
+    print(f"Error fetching data from Spoonacular API: {response.status_code}")
     return None, []
 
 
@@ -51,9 +51,9 @@ def save_ingredient_to_db(ingredient):
             {"$setOnInsert": {"name": ingredient}},
             upsert=True
         )
-        print(f"✅ Ingredient saved to the database: {ingredient}")
+        print(f"Ingredient saved to the database: {ingredient}")
     except Exception as e:
-        print(f"❌ Error saving '{ingredient}': {e}")
+        print(f"Error saving '{ingredient}': {e}")
 
 
 def process_search(location_id: str):
@@ -63,25 +63,25 @@ def process_search(location_id: str):
     """
     title, ingredients = get_random_recipe()
     if not ingredients:
-        print("❌ Error: Failed to retrieve ingredients.")
+        print("Error: Failed to retrieve ingredients.")
         return
 
     new_ingredients = find_new_ingredients(ingredients)
     if not new_ingredients:
-        print("\n✅ All ingredients are already in the database, no API query required.")
+        print("\nAll ingredients are already in the database, no API query required.")
         return
 
-    print("\n🔍 Starting price search in API...")
+    print("\nStarting price search in API...")
     for ingredient in new_ingredients:
         try:
-            print(f"\n🛒 Querying products for: {ingredient}...")
+            print(f"\nQuerying products for: {ingredient}...")
             products = fetch_all_products_with_pagination(ingredient, location_id)
 
             if products:
-                print(f"✅ Found {len(products)} products for '{ingredient}', saving to database.")
+                print(f"Found {len(products)} products for '{ingredient}', saving to database.")
                 save_ingredient_to_db(ingredient)
             else:
-                print(f"❌ No products found for '{ingredient}'.")
+                print(f"No products found for '{ingredient}'.")
 
         except Exception as e:
-            print(f"❌ Error querying '{ingredient}': {e}")
+            print(f"Error querying '{ingredient}': {e}")
