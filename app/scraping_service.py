@@ -1,18 +1,13 @@
 import requests
-from pymongo import MongoClient
 
 from app.config import SPOONACULAR_API_KEY
+from app.db import get_ingredient_collection
 from app.kroger_service import fetch_all_products_with_pagination
-
-# Connect to MongoDB
-client = MongoClient("mongodb://admin:password@localhost:27017/")
-db = client["kroger_db"]
-ingredients_collection = db["ingredients_cache"]
 
 
 def get_existing_ingredients():
     """Retrieves a list of ingredients that have already been queried."""
-    return set(ingredients_collection.distinct("name"))
+    return set(get_ingredient_collection().distinct("name"))
 
 
 def get_random_recipe():
@@ -51,7 +46,7 @@ def find_new_ingredients(ingredients):
 def save_ingredient_to_db(ingredient):
     """Saves an ingredient to the database if it does not already exist."""
     try:
-        ingredients_collection.update_one(
+        get_ingredient_collection().update_one(
             {"name": ingredient},
             {"$setOnInsert": {"name": ingredient}},
             upsert=True
