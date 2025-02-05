@@ -1,14 +1,25 @@
+import asyncio
+import os
+import sys
+from contextlib import asynccontextmanager
+
+import uvicorn
 from fastapi import FastAPI, WebSocket
 from fastapi.staticfiles import StaticFiles
-import uvicorn
 
 from app.db import mongo_db
 from app.scraping_service import process_search
-import sys
-import os
-import asyncio
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("🚀 Starting FastAPI app...")
+    yield
+    print("🔴 Closing MongoDB connection...")
+    mongo_db.client.close()
+
+
+app = FastAPI(lifespan=lifespan)
 
 # Defining the path to the static folder
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,6 +29,7 @@ STATIC_DIR = os.path.join(BASE_DIR, "static")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 connected_clients = []
+
 
 # Function for intercepting print() and sending it to WebSocket
 class WebSocketLogger:
@@ -32,8 +44,10 @@ class WebSocketLogger:
     def flush(self):
         pass
 
+
 # Overloading print() in WebSocketLogger
 sys.stdout = WebSocketLogger()
+
 
 # WebSocket endpoint for logs
 @app.websocket("/logs")
@@ -48,6 +62,7 @@ async def websocket_logs(websocket: WebSocket):
     finally:
         connected_clients.remove(websocket)
 
+
 # endpoint for launching `process_search`
 @app.post("/run_process")
 def run_process():
@@ -60,8 +75,7 @@ def run_process():
         print(f"❌   Error during processing: {e}")
     finally:
         print("🎯 Closing processing...")
-        mongo_db.client.close()
+
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
-
