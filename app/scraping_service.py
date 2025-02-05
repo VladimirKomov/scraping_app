@@ -1,18 +1,18 @@
 import requests
 
-from app.config import SPOONACULAR_API_KEY
-from app.db import get_ingredient_collection
+from app.config import SPOONACULAR_API_KEY, SPOONACULAR_URL
+from app.db import mongo_db
 from app.kroger_service import fetch_all_products_with_pagination
 
 
 def get_existing_ingredients():
     """Retrieves a list of ingredients that have already been queried."""
-    return set(get_ingredient_collection().distinct("name"))
+    return set(mongo_db.ingredients_collection.distinct("name"))
 
 
 def get_random_recipe():
     """Fetches a random recipe from the Spoonacular API."""
-    url = f"https://api.spoonacular.com/recipes/random?apiKey={SPOONACULAR_API_KEY}&number=1"
+    url = f"{SPOONACULAR_URL}random?apiKey={SPOONACULAR_API_KEY}&number=1"
 
     response = requests.get(url)
 
@@ -46,7 +46,7 @@ def find_new_ingredients(ingredients):
 def save_ingredient_to_db(ingredient):
     """Saves an ingredient to the database if it does not already exist."""
     try:
-        get_ingredient_collection().update_one(
+        mongo_db.ingredients_collection.update_one(
             {"name": ingredient},
             {"$setOnInsert": {"name": ingredient}},
             upsert=True

@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 """
@@ -15,10 +16,11 @@ BASE_URL = os.getenv("BASE_URL")
 DATA_SOURCE = os.getenv("DATA_SOURCE")
 
 # Mongo url
-MONGO_URI = os.getenv("MONGO_URI")
+MONGO_URL = os.getenv("MONGO_URL")
 
 # I use an API with mandatory additional authorization, configurations may differ for other APIs.
 KROGER_CLIENT_ID = os.getenv("KROGER_CLIENT_ID")
 KROGER_CLIENT_SECRET = os.getenv("KROGER_CLIENT_SECRET")
 KROGER_TOKEN_URL = os.getenv("KROGER_TOKEN_URL")
+SPOONACULAR_URL = os.getenv("SPOONACULAR_URL")
 SPOONACULAR_API_KEY = os.getenv("SPOONACULAR_API_KEY")
