@@ -74,6 +74,8 @@ def run_process():
     except Exception as e:
         print(f"❌   Error during processing: {e}")
     finally:
+        total_records = mongo_db.get_total_products("03400128")
+        print(f"📊 Total records in database: {total_records}")
         print("🎯 Closing processing...")
 
 

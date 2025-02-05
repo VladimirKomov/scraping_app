@@ -22,6 +22,9 @@ class MongoDB:
     def get_store_collection(self, store_id):
         return self.db[f"products_store_{store_id}"]
 
+    def get_total_products(self, store_id):
+        return self.db[f"products_store_{store_id}"].count_documents({})
+
     def close(self):
         self.client.close()
         MongoDB._instance = None
