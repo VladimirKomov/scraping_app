@@ -13,7 +13,7 @@ from app.scraping_service import process_search
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    print("🚀 Starting FastAPI app...")
+    print("\n🚀 Starting FastAPI app...")
     yield
     print("🔴 Closing MongoDB connection...")
     mongo_db.client.close()
