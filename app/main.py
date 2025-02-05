@@ -1,6 +1,8 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.staticfiles import StaticFiles
 import uvicorn
+
+from app.db import mongo_db
 from app.scraping_service import process_search
 import sys
 import os
@@ -50,9 +52,15 @@ async def websocket_logs(websocket: WebSocket):
 @app.post("/run_process")
 def run_process():
     # "addressLine1":"14221 E Sam Houston Pkwy N","city":"Houston"
-    for i in range(10):
-        process_search("03400128")
-    return {"status": "success"}
+    print("🚀 Starting processing...")
+    try:
+        for i in range(10):
+            process_search("03400128")
+    except Exception as e:
+        print(f"❌   Error during processing: {e}")
+    finally:
+        print("🎯 Closing processing...")
+        mongo_db.client.close()
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
