@@ -1,3 +1,4 @@
 /.idea/
 /.env
 /Kroger.json
+/scripts/test_mongo.py
