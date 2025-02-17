@@ -60,7 +60,7 @@ class ScrapService:
     async def fetch_from_kroger_and_save(self, ingredient_name: str):
         try:
             logger.info(f"Fetching ingredient '{ingredient_name}' from Kroger API...")
-            kroger_client = KrogerAPIClient(ingredient_name, "default_location")
+            kroger_client = KrogerAPIClient(ingredient_name)
             products = await kroger_client.fetch_all_products_with_pagination()
 
             if not products:

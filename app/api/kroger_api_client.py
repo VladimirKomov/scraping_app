@@ -1,3 +1,4 @@
+import asyncio
 import base64
 import time
 
@@ -18,8 +19,9 @@ class KrogerAPIClient:
 
     # Global Token Cache
     token_cache = {"access_token": None, "expires_at": 0}
+    _token_lock = asyncio.Lock()
 
-    def __init__(self, keyword: str, location_id: str):
+    def __init__(self, keyword: str, location_id: str = None):
         """
         Initializing a client to receive products from the Kroger API.
 
@@ -27,7 +29,7 @@ class KrogerAPIClient:
         :param location_id: The store's ID.
         """
         self.keyword = keyword
-        self.location_id = location_id
+        self.location_id = location_id or Config.KROGER_API_LOCATION_ID
         self.seen_product_ids = set()
         self.all_products = []
         # Pagination start index
@@ -38,38 +40,39 @@ class KrogerAPIClient:
     @classmethod
     async def _get_kroger_token(cls):
         """Fetches a token from the Kroger API using caching."""
-        current_time = time.time()
 
-        # Return cached token if still valid
-        if cls.token_cache["access_token"] and cls.token_cache["expires_at"] > current_time:
-            return cls.token_cache["access_token"]
+        async with cls._token_lock:
+            current_time = time.time()
+            # Return cached token if still valid
+            if cls.token_cache["access_token"] and cls.token_cache["expires_at"] > current_time:
+                return cls.token_cache["access_token"]
 
-        # If the token is missing or expired, request a new one
-        credentials = base64.b64encode(f"{cls.KROGER_API_CLIENT_ID}:{cls.KROGER_API_CLIENT_SECRET}".encode()).decode()
+            # If the token is missing or expired, request a new one
+            credentials = base64.b64encode(f"{cls.KROGER_API_CLIENT_ID}:{cls.KROGER_API_CLIENT_SECRET}".encode()).decode()
 
-        async with httpx.AsyncClient(timeout=10) as client:
-            try:
-                response = await client.post(
-                    cls.KROGER_API_TOKEN_URL,
-                    headers={
-                        "Authorization": f"Basic {credentials}",
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    data={"grant_type": "client_credentials", "scope": "product.compact"},
-                )
+            async with httpx.AsyncClient(timeout=10) as client:
+                try:
+                    response = await client.post(
+                        cls.KROGER_API_TOKEN_URL,
+                        headers={
+                            "Authorization": f"Basic {credentials}",
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        data={"grant_type": "client_credentials", "scope": "product.compact"},
+                    )
 
-                if response.status_code == 200:
-                    token_data = response.json()
-                    cls.token_cache["access_token"] = token_data.get("access_token")
-                    cls.token_cache["expires_at"] = current_time + token_data.get("expires_in", 0)
-                    return token_data["access_token"]
-                else:
-                    logger.error(f"Failed to get access token: {response.text}")
-                    raise Exception(f"Failed to get access token: {response.text}")
+                    if response.status_code == 200:
+                        token_data = response.json()
+                        cls.token_cache["access_token"] = token_data.get("access_token")
+                        cls.token_cache["expires_at"] = current_time + token_data.get("expires_in", 0)
+                        return token_data["access_token"]
+                    else:
+                        logger.error(f"Failed to get access token: {response.text}")
+                        raise Exception(f"Failed to get access token: {response.text}")
 
-            except httpx.HTTPError as e:
-                logger.error(f"Request error while fetching token: {e}")
-                raise Exception(f"Request error while fetching token: {e}")
+                except httpx.HTTPError as e:
+                    logger.error(f"Request error while fetching token: {e}")
+                    raise Exception(f"Request error while fetching token: {e}")
 
     async def _get_products(self):
         """Executes a request to the Kroger API."""
