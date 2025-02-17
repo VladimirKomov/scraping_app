@@ -13,7 +13,7 @@ logger = LoggerConfig.get_logger()
 
 
 
-class SpoonacularScrapService:
+class ScrapService:
     def __init__(self, db: AsyncIOMotorDatabase):
         self.repository = MongoRepository(db)
         self.spoonacular_client = SpoonacularAPIClient()
@@ -64,7 +64,7 @@ class SpoonacularScrapService:
             products = await kroger_client.fetch_all_products_with_pagination()
 
             if not products:
-                logger.warning(f"⚠ No products found for '{ingredient_name}'. Skipping.")
+                logger.warning(f"No products found for '{ingredient_name}'. Skipping.")
                 return
 
             await self.save_to_database(products, ingredient_name)

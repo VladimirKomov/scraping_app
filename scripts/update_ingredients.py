@@ -1,12 +1,15 @@
+import os
 import time
-import numpy as np
 from datetime import datetime
 
 import faiss
+import numpy as np
+from dotenv import load_dotenv
 from pymongo import MongoClient
 from sentence_transformers import SentenceTransformer
 
-from app.config import DATA_SOURCE
+load_dotenv()
+DATA_SOURCE = os.getenv("DATA_SOURCE")
 
 # Connect to MongoDB
 client = MongoClient("mongodb://admin:password@localhost:27017/")

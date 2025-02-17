@@ -26,7 +26,8 @@ class SpoonacularAPIClient:
                         f"{self.SPOONACULAR_API_BASE_URL}/recipes/random",
                         params={
                             "apiKey": api_key,
-                            "number": 100,
+                            # the number can be from 1 to 100 (inclusive)
+                            "number": 1,
                         },
                     )
 

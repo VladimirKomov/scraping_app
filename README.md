@@ -49,12 +49,8 @@ poetry install
 ```
 
 ### **3️⃣ Configure Environment Variables**
-Create a `.env` file in the root directory and add the required API credentials:
-```ini
-BASE_URL=<API_BASE_URL>
-API_KEY=<YOUR_API_KEY>
-MONGO_URI=mongodb://admin:password@localhost:27017/
-```
+Create a `.env` file in the root directory, see the example in the `.env.example` file
+
 
 ### **4️⃣ Start MongoDB manually**
 If you're not using Docker, you need a running MongoDB instance:
@@ -64,7 +60,7 @@ mongod --dbpath=data/db --port 27017
 
 ### **5️⃣ Run the application with Poetry**
 ```sh
-poetry run python main.py
+poetry run python scrape.py
 ```
 
 ---
