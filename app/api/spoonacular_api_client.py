@@ -3,7 +3,7 @@ import asyncio
 
 from app.config.config import Config
 from app.config.logger_config import LoggerConfig
-from app.scraping_service import get_random_recipe
+
 
 logger = LoggerConfig.get_logger()
 
@@ -13,7 +13,7 @@ class SpoonacularAPIClient:
 
     SPOONACULAR_API_BASE_URL = Config.SPOONACULAR_API_BASE_URL
     SPOONACULAR_API_KEYS = Config.SPOONACULAR_API_KEYS
-    _current_key_index = 0  # Индекс текущего ключа
+    _current_key_index = 0
 
     async def _get_random_recipe(self):
         """Fetches random recipes asynchronously from the Spoonacular API."""
@@ -52,4 +52,4 @@ class SpoonacularAPIClient:
 
     def fetch_random_recipe(self):
         """Fetches a random recipe using the external function."""
-        return get_random_recipe()
+        return self._get_random_recipe()
