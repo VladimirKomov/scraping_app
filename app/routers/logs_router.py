@@ -3,12 +3,11 @@ import asyncio
 from typing import List
 
 from app.config.logger_config import LoggerConfig
+from app.handlers.web_socket_handler import connected_websockets
 
 logger = LoggerConfig.get_logger()
 
 router = APIRouter()
-
-connected_websockets: List[WebSocket] = []
 
 @router.websocket("/logs")
 async def websocket_logs(websocket: WebSocket):
