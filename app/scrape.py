@@ -20,5 +20,6 @@ async def run_scraping():
     logger.info("Scraping completed. Closing MongoDB connection.")
     await mongodb_client.close()
 
+# run manually to collect data
 if __name__ == "__main__":
     asyncio.run(run_scraping())
