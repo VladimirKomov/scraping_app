@@ -54,10 +54,10 @@ class ScrapService:
             raise HTTPException(status_code=500, detail="Error fetching ingredients from Spoonacular")
 
     async def process_ingredients(self, ingredients: set):
-        tasks = [self.fetch_from_kroger_and_save(ingredient) for ingredient in ingredients]
+        tasks = [self.fetch_from_kroger(ingredient) for ingredient in ingredients]
         await asyncio.gather(*tasks)
 
-    async def fetch_from_kroger_and_save(self, ingredient_name: str):
+    async def fetch_from_kroger(self, ingredient_name: str):
         try:
             logger.info(f"Fetching ingredient '{ingredient_name}' from Kroger API...")
             kroger_client = KrogerAPIClient(ingredient_name)
