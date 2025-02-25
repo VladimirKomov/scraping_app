@@ -1,7 +1,22 @@
 services:
+  backend:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: backend_kroger
+    restart: always
+    volumes:
+      - ./app:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mongodb
+    environment:
+      - PYTHONPATH=/app
+      - MONGO_URI=mongodb://admin:password@mongodb:27017/your_db_name?authSource=admin
+
   mongodb:
     image: mongo:latest
-    # you can replace the name with any of your own
     container_name: mongodb_kroger
     restart: always
     ports:
@@ -11,19 +26,11 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
-
-  backend:
-    build:
-      context: .
-      dockerfile: app/Dockerfile
-    container_name: backend_kroger
-    restart: always
-    ports:
-      - "8000:8000"
-    depends_on:
-      - mongodb
-    environment:
-      MONGO_URI: "mongodb://admin:password@mongodb:27017/your_db_name?authSource=admin"
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.runCommand('ping').ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
     build:
