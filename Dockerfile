@@ -18,4 +18,4 @@ RUN poetry config virtualenvs.create false && \
 COPY . .
 
 # Specify the command to launch the application
-CMD ["poetry", "run", "python", "main.py"]
+CMD ["poetry", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
