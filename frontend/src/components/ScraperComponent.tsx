@@ -1,5 +1,6 @@
 import * as React from "react";
-import axios from '../api'
+import axios from "axios";
+
 
 export const ScraperComponent: React.FC = () => {
     const [message, setMessage] = React.useState<string>("");
@@ -12,7 +13,7 @@ export const ScraperComponent: React.FC = () => {
         setError("");
 
         try {
-            const response = await axios.post("/scrap-ingredients");
+            const response = await axios.post("http://localhost:8000/api/v1/scrap-ingredients");
             setMessage(response.data.message);
         } catch (err: any) {
             setError(err.message);

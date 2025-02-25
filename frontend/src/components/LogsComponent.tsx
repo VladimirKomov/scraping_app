@@ -4,7 +4,7 @@ const LogsComponent: React.FC = () => {
     const [logs, setLogs] = useState<string[]>([]);
 
     useEffect(() => {
-        const ws = new WebSocket(`${window.location.origin}/ws/logs`);
+        const ws = new WebSocket("ws://localhost:8000/ws/logs");
 
         ws.onopen = () => {
             console.log("WebSocket connection - ok");
