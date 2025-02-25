@@ -1,19 +1,17 @@
 services:
   backend:
-    build:
-      context: ./app
-      dockerfile: Dockerfile
+    build: .
     container_name: backend_kroger
     restart: always
-    volumes:
-      - ./app:/app
-    ports:
-      - "8000:8000"
     depends_on:
       - mongodb
+    env_file:
+      - .env
     environment:
-      - PYTHONPATH=/app
-      - MONGO_URI=mongodb://admin:password@mongodb:27017/your_db_name?authSource=admin
+      PYTHONUNBUFFERED: 1
+    command: [ "poetry", "run", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000" ]
+    ports:
+      - "8000:8000"
 
   mongodb:
     image: mongo:latest
@@ -36,6 +34,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+    container_name: frontend_kroger
+    restart: always
     environment:
       - NODE_ENV=production
     ports:
