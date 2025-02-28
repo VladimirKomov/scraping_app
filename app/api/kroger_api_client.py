@@ -3,9 +3,11 @@ import base64
 import time
 
 import httpx
+print(f"Imported httpx in: {__name__}")
 
 from app.config.config import Config
 from app.config.logger_config import LoggerConfig
+
 
 logger = LoggerConfig.get_logger()
 
@@ -62,7 +64,11 @@ class KrogerAPIClient:
                     )
 
                     if response.status_code == 200:
-                        token_data = response.json()
+                        try:
+                            token_data = await response.json()
+                        except Exception as e:
+                            logger.error(f"Invalid JSON response: {e}")
+                            raise Exception(f"Invalid JSON response: {e}")
                         cls.token_cache["access_token"] = token_data.get("access_token")
                         cls.token_cache["expires_at"] = current_time + token_data.get("expires_in", 0)
                         return token_data["access_token"]
