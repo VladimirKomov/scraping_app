@@ -1,13 +1,14 @@
 import asyncio
 import base64
+import json
 import time
 
 import httpx
+
 print(f"Imported httpx in: {__name__}")
 
 from app.config.config import Config
 from app.config.logger_config import LoggerConfig
-
 
 logger = LoggerConfig.get_logger()
 
@@ -50,7 +51,8 @@ class KrogerAPIClient:
                 return cls.token_cache["access_token"]
 
             # If the token is missing or expired, request a new one
-            credentials = base64.b64encode(f"{cls.KROGER_API_CLIENT_ID}:{cls.KROGER_API_CLIENT_SECRET}".encode()).decode()
+            credentials = base64.b64encode(
+                f"{cls.KROGER_API_CLIENT_ID}:{cls.KROGER_API_CLIENT_SECRET}".encode()).decode()
 
             async with httpx.AsyncClient(timeout=10) as client:
                 try:
@@ -103,7 +105,11 @@ class KrogerAPIClient:
                     logger.error(f"Failed to fetch products: {response.text}")
                     raise Exception(f"Failed to fetch products: {response.text}")
 
-                return response.json()
+                try:
+                    return await response.json()
+                except json.JSONDecodeError as e:
+                    logger.error(f"Invalid JSON response: {e}")
+                    raise Exception(f"Invalid JSON response: {e}")
 
             except httpx.HTTPError as e:
                 logger.error(f"Request error while fetching products: {e}")
